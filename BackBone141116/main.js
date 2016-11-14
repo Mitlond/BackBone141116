@@ -20,10 +20,23 @@ App.Views.Task = Backbone.Model.extend({
 });
 App.Collections.Task = Backbone.Collections.extend({
 	model: App.Models.Task
+});
+
+App.Views.Tasks = Backbone.Collections.extend({
+	 tagName: 'ul',
+	 render: function () {
+		  this.collection.each(this.addOne,this);
+		  return this;
+	 },
+	 addOne: function (task) {
+		 // создавать новый дочерний вид 
+		 var taskView = new App.Views.Task({ model: task});
+		 //добавлять его в корневой элемент 
+		 this.$el.append(taskView.render().el);
+	 }
 })
 
-
-var tasks = new App.Collections.Task([
+var tasksCollection = new App.Collections.Task([
 {
 	title: 'Сходить в магазин',
 	priority: 4
@@ -36,9 +49,7 @@ var tasks = new App.Collections.Task([
 	title: 'Сходить на работу',
 	priority: 5
 },
-])
+]);
+var taskView = new App.Views.Tasks({collection:  tasksCollection})
 
-var taskView = new App.Views.Task({ model: task});
-
-console.log(taskView.render().el);
 });
